@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {SafeAreaView, Text, StyleSheet, FlatList} from 'react-native';
+import {SafeAreaView, Text, StyleSheet, FlatList, View} from 'react-native';
 import * as Location from 'expo-location';
 
 import Menu from '../../components/Menu';
@@ -9,88 +9,6 @@ import Forecast from '../../components/Forecast';
 
 import api, { key } from '../../Services/api';
 
-const mylist = [
-    {
-      "date": "12/03",
-      "weekday": "Sex",
-      "max": 27,
-      "min": 18,
-      "description": "Tempestades",
-      "condition": "storm"
-    },
-    {
-      "date": "13/03",
-      "weekday": "Sáb",
-      "max": 28,
-      "min": 19,
-      "description": "Tempestades",
-      "condition": "storm"
-    },
-    {
-      "date": "14/03",
-      "weekday": "Dom",
-      "max": 28,
-      "min": 18,
-      "description": "Tempestades",
-      "condition": "clear_day"
-    },
-    {
-      "date": "15/03",
-      "weekday": "Seg",
-      "max": 27,
-      "min": 18,
-      "description": "Tempestades isoladas",
-      "condition": "storm"
-    },
-    {
-      "date": "16/03",
-      "weekday": "Ter",
-      "max": 27,
-      "min": 18,
-      "description": "Tempestades",
-      "condition": "storm"
-    },
-    {
-      "date": "17/03",
-      "weekday": "Qua",
-      "max": 28,
-      "min": 18,
-      "description": "Tempestades",
-      "condition": "storm"
-    },
-    {
-      "date": "18/03",
-      "weekday": "Qui",
-      "max": 24,
-      "min": 19,
-      "description": "Tempestades",
-      "condition": "storm"
-    },
-    {
-      "date": "19/03",
-      "weekday": "Sex",
-      "max": 25,
-      "min": 19,
-      "description": "Tempestades isoladas",
-      "condition": "storm"
-    },
-    {
-      "date": "20/03",
-      "weekday": "Sáb",
-      "max": 26,
-      "min": 20,
-      "description": "Tempestades",
-      "condition": "storm"
-    },
-    {
-      "date": "21/03",
-      "weekday": "Dom",
-      "max": 27,
-      "min": 18,
-      "description": "Tempestades",
-      "condition": "storm"
-    }
-  ];
 
 export default function Home(){
 
@@ -139,19 +57,28 @@ export default function Home(){
 
   }, []);
 
+    if(loading){
+      return(
+        <View style={styles.container}>
+          <Text style={{ fontSize: 17, fontStyle: 'italic' }}>Carregando dados...</Text>
+        </View>
+      )
+    }
+
     return(
         <SafeAreaView style={styles.container}>
             <Menu />
 
-            <Header background={background} weather={weather} />
+            <Header background={background} weather={weather} icon={icon}  />
 
-            <Conditions />
+            <Conditions weather={weather} />
 
             <FlatList
+            showsHorizontalScrollIndicator={false}
             horizontal={true}
             contentContainerStyle={{ paddingBottom: '5%'}}
             style={styles.list}
-            data={mylist}
+            data={weather.results.forecast}
             keyExtractor={ item => item.date}
             renderItem={ ({ item }) => <Forecast data={item} />}
             />
